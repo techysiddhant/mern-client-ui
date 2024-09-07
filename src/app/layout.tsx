@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(manrope.variable, "antialiased font-manrope")}
+        className={cn(manrope.variable, "antialiased font-manrope bg-background")}
       >
         <Header />
         <main>
