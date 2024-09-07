@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+// import localFont from "next/font/local";
 import "./globals.css";
 import { Manrope } from "next/font/google";
 import { cn } from "@/lib/utils";
+import Header from "@/components/custom/header";
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope"
@@ -33,7 +34,10 @@ export default function RootLayout({
       <body
         className={cn(manrope.variable, "antialiased font-manrope")}
       >
-        {children}
+        <Header />
+        <main>
+          {children}
+        </main>
       </body>
     </html>
   );
