@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
+import ToppingList from "./topping-list";
 
 export type Product = {
     id: string;
@@ -59,18 +60,21 @@ const ProductCard = ({ product }: PropTypes) => {
                                         </div>
                                     </RadioGroup>
                                 </div>
-                                <h4 className="mt-6">Choose the crust</h4>
-                                <RadioGroup defaultValue="thin" className="grid grid-cols-3 gap-4 mt-2">
-                                    <div className="">
-                                        <RadioGroupItem value="thin" className="peer sr-only" aria-label="Thin" id="thin" />
-                                        <Label htmlFor="thin" className="flex items-center justify-between flex-col    rounded-md border-2  bg-white p-4 hover:bg-accent hover:text-accent-foreground  peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">Thin</Label>
-                                    </div>
-                                    <div className="">
-                                        <RadioGroupItem value="thick" className="peer sr-only" aria-label="Thick" id="thick" />
-                                        <Label htmlFor="thick" className="flex items-center justify-between flex-col    rounded-md border-2  bg-white p-4 hover:bg-accent hover:text-accent-foreground  peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">Thick</Label>
-                                    </div>
+                                <div>
+                                    <h4 className="mt-6">Choose the crust</h4>
+                                    <RadioGroup defaultValue="thin" className="grid grid-cols-3 gap-4 mt-2">
+                                        <div className="">
+                                            <RadioGroupItem value="thin" className="peer sr-only" aria-label="Thin" id="thin" />
+                                            <Label htmlFor="thin" className="flex items-center justify-between flex-col    rounded-md border-2  bg-white p-4 hover:bg-accent hover:text-accent-foreground  peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">Thin</Label>
+                                        </div>
+                                        <div className="">
+                                            <RadioGroupItem value="thick" className="peer sr-only" aria-label="Thick" id="thick" />
+                                            <Label htmlFor="thick" className="flex items-center justify-between flex-col    rounded-md border-2  bg-white p-4 hover:bg-accent hover:text-accent-foreground  peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">Thick</Label>
+                                        </div>
 
-                                </RadioGroup>
+                                    </RadioGroup>
+                                </div>
+                                <ToppingList />
                             </div>
                         </div>
                     </DialogContent>
