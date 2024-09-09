@@ -1,61 +1,62 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
-import ProductCard, { Product } from "./components/product-card";
-import { Category } from "../../lib/types";
-const product: Product[] =
-  [
-    {
-      id: "1",
-      name: "Onion Pizza",
-      description: "Cheesy Delight",
-      image: "/pizza-main.png",
-      price: 150
-    },
-    {
-      id: "2",
-      name: "Corn Pizza",
-      description: "Cheesy Delight",
-      image: "/pizza-main.png",
-      price: 150
-    },
-    {
-      id: "3",
-      name: "Mushroom Pizza",
-      description: "Cheesy Delight",
-      image: "/pizza-main.png",
-      price: 150
-    },
-    {
-      id: "4",
-      name: "Peperoni Pizza",
-      description: "Cheesy Delight",
-      image: "/pizza-main.png",
-      price: 150
-    },
-    {
-      id: "5",
-      name: "Cheese Pizza",
-      description: "Cheesy Delight",
-      image: "/pizza-main.png",
-      price: 150
-    },
-    {
-      id: "6",
-      name: "Veggie Pizza",
-      description: "Cheesy Delight",
-      image: "/pizza-main.png",
-      price: 150
-    },
-    {
-      id: "7",
-      name: "Panner Pizza",
-      description: "Cheesy Delight",
-      image: "/pizza-main.png",
-      price: 150
-    },
-  ]
+import ProductCard from "./components/product-card";
+import { Category, Product } from "../../lib/types";
+// const product: Product[] =
+//   [
+//     {
+//       id: "1",
+//       name: "Onion Pizza",
+//       description: "Cheesy Delight",
+//       image: "/pizza-main.png",
+//       price: 150
+//     },
+//     {
+//       id: "2",
+//       name: "Corn Pizza",
+//       description: "Cheesy Delight",
+//       image: "/pizza-main.png",
+//       price: 150
+//     },
+//     {
+//       id: "3",
+//       name: "Mushroom Pizza",
+//       description: "Cheesy Delight",
+//       image: "/pizza-main.png",
+//       price: 150
+//     },
+//     {
+//       id: "4",
+//       name: "Peperoni Pizza",
+//       description: "Cheesy Delight",
+//       image: "/pizza-main.png",
+//       price: 150
+//     },
+//     {
+//       id: "5",
+//       name: "Cheese Pizza",
+//       description: "Cheesy Delight",
+//       image: "/pizza-main.png",
+//       price: 150
+//     },
+//     {
+//       id: "6",
+//       name: "Veggie Pizza",
+//       description: "Cheesy Delight",
+//       image: "/pizza-main.png",
+//       price: 150
+//     },
+//     {
+//       id: "7",
+//       name: "Panner Pizza",
+//       description: "Cheesy Delight",
+//       image: "/pizza-main.png",
+//       price: 150
+//     },
+//   ]
 export default async function Home() {
+  //TODO: Do concurrent request with promise.all
   const categoryResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
     next: {
       revalidate: 3600
@@ -63,7 +64,16 @@ export default async function Home() {
   });
   if (!categoryResponse.ok) throw new Error("Failed to fetch category");
   const categories = await categoryResponse.json();
-  console.log(categories);
+  //TODO: add dynamic tenant ID
+  const productResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=7`, {
+    next: {
+      revalidate: 3600
+    }
+  });
+  if (!productResponse.ok) throw new Error("Failed to fetch products");
+  const products: { data: Product[] } = await productResponse.json();
+  // console.log(products);
+  // console.log(categories);
   return (
     <>
       <section className="bg-white ">
@@ -87,28 +97,31 @@ export default async function Home() {
       </section>
       <section className="bg-background">
         <div className="container mx-auto py-12">
-          <Tabs defaultValue="pizza" >
+          <Tabs defaultValue={categories[0]._id}>
             <TabsList >
               {
                 categories.map((category: Category) => (
                   <TabsTrigger key={category._id} value={category._id} className="text-md">{category.name}</TabsTrigger>
                 ))
               }
-              {/* <TabsTrigger value="pizza" className="text-md">Pizza</TabsTrigger>
-              <TabsTrigger value="beverages" className="text-md">Beverages</TabsTrigger> */}
+
             </TabsList>
-            <TabsContent value="pizza" >
-              <div className="grid grid-cols-4 gap-6 mt-6">
-                {
-                  product.map((product) => {
-                    return (
-                      <ProductCard key={product.id} product={product} />
-                    )
-                  })
-                }
-              </div>
-            </TabsContent>
-            <TabsContent value="beverages">Beverages List</TabsContent>
+            {
+              categories.map((category: Category) => (
+                <TabsContent key={category._id} value={category._id} >
+                  <div className="grid grid-cols-4 gap-6 mt-6">
+                    {
+                      products?.data?.filter(product => product.category._id === category._id).map((product) => {
+                        return (
+                          <ProductCard key={product._id} product={product} />
+                        )
+                      })
+                    }
+                  </div>
+                </TabsContent>
+              ))
+            }
+
           </Tabs>
         </div>
 
