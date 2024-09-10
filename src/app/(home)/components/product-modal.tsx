@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Product } from "@/lib/types"
+import { Suspense } from "react"
 
 const ProductModal = ({ product }: { product: Product }) => {
     return (
@@ -39,8 +40,10 @@ const ProductModal = ({ product }: { product: Product }) => {
                                 </div>
                             ))
                         }
+                        <Suspense fallback={"Loading..."}>
 
-                        <ToppingList />
+                            <ToppingList />
+                        </Suspense>
                         <div className="flex justify-between items-center mt-12">
                             <span className="font-bold">
                                 {/* ₹{product.price} */}

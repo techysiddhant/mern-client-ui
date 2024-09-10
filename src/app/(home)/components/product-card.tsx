@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Product } from "@/lib/types";
 import ProductModal from "./product-modal";
 
-
 type PropTypes = { product: Product }
 const ProductCard = ({ product }: PropTypes) => {
     return (
