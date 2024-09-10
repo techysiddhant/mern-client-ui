@@ -39,3 +39,9 @@ export type Product = {
   priceConfiguration: PriceConfiguration;
   attributes: ProductAttribute[];
 };
+export type Topping = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+}
