@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button"
 import { ShoppingCart } from "lucide-react"
 import ToppingList from "./topping-list"
@@ -6,9 +7,22 @@ import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Product } from "@/lib/types"
-import { Suspense } from "react"
-
+import { startTransition, Suspense, useState } from "react"
+type ChosenConfig = {
+    [key: string]: string
+}
 const ProductModal = ({ product }: { product: Product }) => {
+    const [chosenConfig, setChosenConfig] = useState<ChosenConfig>({});
+    const handleRadioChange = (key: string, data: string) => {
+        console.log(key, data);
+        startTransition(() => {
+            setChosenConfig((prev) => {
+                return {
+                    ...prev, [key]: data
+                }
+            })
+        })
+    }
     return (
         <Dialog>
             <DialogTrigger asChild >
@@ -26,7 +40,7 @@ const ProductModal = ({ product }: { product: Product }) => {
                             Object.entries(product.category.priceConfiguration).map(([key, value]) => (
                                 <div key={key}>
                                     <h4 className="mt-6">Choose the {key}</h4>
-                                    <RadioGroup defaultValue={value.availableOptions[0]} className="grid grid-cols-3 gap-4 mt-2">
+                                    <RadioGroup onValueChange={(data) => { handleRadioChange(key, data) }} defaultValue={value.availableOptions[0]} className="grid grid-cols-3 gap-4 mt-2">
                                         {
                                             value?.availableOptions?.map((option) => (
                                                 <div className="" key={option}>
