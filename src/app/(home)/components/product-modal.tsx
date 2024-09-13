@@ -107,10 +107,14 @@ const ProductModal = ({ product }: { product: Product }) => {
                                 </div>
                             ))
                         }
-                        <Suspense fallback={"Loading..."}>
+                        {/* TODO: make this condition dynamic (add hasTooping feild in category document) */}
+                        {
+                            product.category.name === "Pizza" &&
+                            <Suspense fallback={"Loading..."}>
+                                <ToppingList handleCheckBoxCheck={handleCheckBoxCheck} selectedToppings={selectedToppings} />
+                            </Suspense>
+                        }
 
-                            <ToppingList handleCheckBoxCheck={handleCheckBoxCheck} selectedToppings={selectedToppings} />
-                        </Suspense>
                         <div className="flex justify-between items-center mt-12">
                             <span className="font-bold">
                                 {/* ₹{product.price} */}
