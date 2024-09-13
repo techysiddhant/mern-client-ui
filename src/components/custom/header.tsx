@@ -3,7 +3,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Phone } from "lucide-react"
 import { Button } from "../ui/button"
 import { Tenant } from "@/lib/types"
-import CartCounter from "./CartCounter"
+import dynamic from "next/dynamic"
+const CartCounterWithoutSSR = dynamic(() => import('./CartCounter'), { ssr: false });
 
 const Header = async () => {
     const tenantResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`, {
@@ -45,7 +46,7 @@ const Header = async () => {
                             <Link href="/" className="hover:text-primary">Orders</Link>
                         </li>
                     </ul>
-                    <CartCounter />
+                    <CartCounterWithoutSSR />
                     <div className="flex items-center gap-x-2 ml-12">
                         <Phone />
                         <span className="">+91 1234567890</span>
