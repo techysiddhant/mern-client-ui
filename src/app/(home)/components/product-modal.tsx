@@ -8,11 +8,14 @@ import Image from "next/image"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Product, Topping } from "@/lib/types"
 import { startTransition, Suspense, useState } from "react"
+import { useAppDispatch } from "@/lib/store/hooks";
+import { addToCart } from "@/lib/store/features/cart/cartSlice";
 type ChosenConfig = {
     [key: string]: string
 }
 const ProductModal = ({ product }: { product: Product }) => {
     const [chosenConfig, setChosenConfig] = useState<ChosenConfig>({});
+    const dispatch = useAppDispatch();
     const handleRadioChange = (key: string, data: string) => {
         console.log(key, data);
         startTransition(() => {
@@ -33,6 +36,16 @@ const ProductModal = ({ product }: { product: Product }) => {
             }
             setSelectedToppings((prev: Topping[]) => [...prev, topping]);
         })
+    }
+    const handleAddToCart = (product: Product) => {
+        const itemToAdd = {
+            product,
+            chosenConfiguration: {
+                priceConfiguration: chosenConfig!,
+                selectedToppings: selectedToppings
+            }
+        }
+        dispatch(addToCart(itemToAdd))
     }
     return (
         <Dialog>
@@ -75,7 +88,7 @@ const ProductModal = ({ product }: { product: Product }) => {
                                 ₹500
 
                             </span>
-                            <Button>
+                            <Button onClick={() => handleAddToCart(product)}>
                                 <ShoppingCart size={20} />
                                 <span className="ml-2">Add to cart</span>
                             </Button>
