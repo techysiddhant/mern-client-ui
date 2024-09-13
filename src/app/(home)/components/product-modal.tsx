@@ -14,7 +14,17 @@ type ChosenConfig = {
     [key: string]: string
 }
 const ProductModal = ({ product }: { product: Product }) => {
-    const [chosenConfig, setChosenConfig] = useState<ChosenConfig>({});
+    const defaultConfiguration = Object.entries(product.category.priceConfiguration).map(([key, value]) => {
+        return {
+            [key]: value.availableOptions[0]
+        }
+    }).reduce((acc, item) => {
+        return {
+            ...acc,
+            ...item
+        }
+    }, {})
+    const [chosenConfig, setChosenConfig] = useState<ChosenConfig>(defaultConfiguration as unknown as ChosenConfig);
     const dispatch = useAppDispatch();
     const handleRadioChange = (key: string, data: string) => {
         console.log(key, data);
