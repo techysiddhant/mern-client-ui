@@ -6,7 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { Product } from "@/lib/types"
+import { Product, Topping } from "@/lib/types"
 import { startTransition, Suspense, useState } from "react"
 type ChosenConfig = {
     [key: string]: string
@@ -21,6 +21,17 @@ const ProductModal = ({ product }: { product: Product }) => {
                     ...prev, [key]: data
                 }
             })
+        })
+    }
+    const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+    const handleCheckBoxCheck = (topping: Topping) => {
+        const isAlreadyExists = selectedToppings.some((selectedTopping: Topping) => selectedTopping.id === topping.id);
+        startTransition(() => {
+            if (isAlreadyExists) {
+                setSelectedToppings((prev: Topping[]) => prev.filter((selectedTopping: Topping) => selectedTopping.id !== topping.id))
+                return;
+            }
+            setSelectedToppings((prev: Topping[]) => [...prev, topping]);
         })
     }
     return (
@@ -56,7 +67,7 @@ const ProductModal = ({ product }: { product: Product }) => {
                         }
                         <Suspense fallback={"Loading..."}>
 
-                            <ToppingList />
+                            <ToppingList handleCheckBoxCheck={handleCheckBoxCheck} selectedToppings={selectedToppings} />
                         </Suspense>
                         <div className="flex justify-between items-center mt-12">
                             <span className="font-bold">
