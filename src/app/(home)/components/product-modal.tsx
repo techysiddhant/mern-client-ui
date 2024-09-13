@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Product, Topping } from "@/lib/types"
-import { startTransition, Suspense, useState } from "react"
+import { startTransition, Suspense, useMemo, useState } from "react"
 import { useAppDispatch } from "@/lib/store/hooks";
 import { addToCart } from "@/lib/store/features/cart/cartSlice";
 type ChosenConfig = {
@@ -25,6 +25,8 @@ const ProductModal = ({ product }: { product: Product }) => {
         }
     }, {})
     const [chosenConfig, setChosenConfig] = useState<ChosenConfig>(defaultConfiguration as unknown as ChosenConfig);
+
+
     const dispatch = useAppDispatch();
     const handleRadioChange = (key: string, data: string) => {
         console.log(key, data);
@@ -57,6 +59,16 @@ const ProductModal = ({ product }: { product: Product }) => {
         }
         dispatch(addToCart(itemToAdd))
     }
+    const totalPrice = useMemo(() => {
+        const toppingsTotal = selectedToppings.reduce((acc, item) => {
+            return acc + item.price
+        }, 0);
+        const configPricing = Object.entries(chosenConfig).reduce((acc, [key, value]: [string, string]) => {
+            const price = product.priceConfiguration[key].availableOptions[value];
+            return acc + price
+        }, 0);
+        return configPricing + toppingsTotal
+    }, [chosenConfig, selectedToppings, product.priceConfiguration])
     return (
         <Dialog>
             <DialogTrigger asChild >
@@ -79,7 +91,14 @@ const ProductModal = ({ product }: { product: Product }) => {
                                             value?.availableOptions?.map((option) => (
                                                 <div className="" key={option}>
                                                     <RadioGroupItem value={option} className="peer sr-only" aria-label={option} id={option} />
-                                                    <Label htmlFor={option} className="flex items-center justify-between flex-col    rounded-md border-2  bg-white p-4 hover:bg-accent hover:text-accent-foreground  peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">{option}</Label>
+                                                    <Label htmlFor={option} className="flex items-center justify-between flex-col    rounded-md border-2  bg-white p-4 hover:bg-accent hover:text-accent-foreground  peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">{option}
+
+                                                        <span className="mt-1 font-semibold">
+                                                            ₹
+                                                            {product.priceConfiguration[key].availableOptions[option]}
+                                                        </span>
+
+                                                    </Label>
                                                 </div>
                                             ))
                                         }
@@ -95,7 +114,7 @@ const ProductModal = ({ product }: { product: Product }) => {
                         <div className="flex justify-between items-center mt-12">
                             <span className="font-bold">
                                 {/* ₹{product.price} */}
-                                ₹500
+                                ₹{totalPrice}
 
                             </span>
                             <Button onClick={() => handleAddToCart(product)}>

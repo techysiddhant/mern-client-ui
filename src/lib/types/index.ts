@@ -27,6 +27,14 @@ export type ProductAttribute = {
   name: string;
   value: string | boolean;
 };
+export interface ProductPriceConfiguration {
+  [key: string]: {
+    priceType: "base" | "additional";
+    availableOptions: {
+      [key: string]: number;
+    };
+  };
+}
 export type Product = {
   _id: string;
   name: string;
@@ -36,7 +44,7 @@ export type Product = {
   createdAt: string;
   image: string;
   tenantId: string;
-  priceConfiguration: PriceConfiguration;
+  priceConfiguration: ProductPriceConfiguration;
   attributes: ProductAttribute[];
 };
 export type Topping = {
@@ -44,4 +52,4 @@ export type Topping = {
   name: string;
   price: number;
   image: string;
-}
+};
