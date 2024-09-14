@@ -2,6 +2,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import Image from "next/image";
 import { Product } from "@/lib/types";
 import ProductModal from "./product-modal";
+import { getFromPrice } from "@/lib/utils";
 
 type PropTypes = { product: Product }
 const ProductCard = ({ product }: PropTypes) => {
@@ -19,7 +20,7 @@ const ProductCard = ({ product }: PropTypes) => {
                     <span>From </span>
                     <span>
                         {/* ₹{product.price} */}
-                        ₹100
+                        ₹{getFromPrice(product)}
                     </span>
                 </p>
                 <ProductModal product={product} />
