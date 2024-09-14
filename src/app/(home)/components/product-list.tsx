@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ProductCard from "./product-card"
 import { Category, Product } from "@/lib/types"
 
-const ProductList = async () => {
+const ProductList = async ({ searchParams }: { searchParams: { restaurantId: string } }) => {
     //TODO: Do concurrent request with promise.all
     const categoryResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
         next: {
@@ -12,7 +12,7 @@ const ProductList = async () => {
     if (!categoryResponse.ok) throw new Error("Failed to fetch category");
     const categories = await categoryResponse.json();
     //TODO: add dynamic tenant ID
-    const productResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=7`, {
+    const productResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=${searchParams?.restaurantId}`, {
         next: {
             revalidate: 3600
         }

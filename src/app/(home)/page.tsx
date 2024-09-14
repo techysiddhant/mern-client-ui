@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import ProductList from "./components/product-list";
 import { Suspense } from "react";
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: { restaurantId: string } }) {
   // //TODO: Do concurrent request with promise.all
   // const categoryResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
   //   next: {
@@ -44,7 +44,7 @@ export default async function Home() {
       </section>
       {/* TODO: Add skeleton */}
       <Suspense fallback={"Loading"}>
-        <ProductList />
+        <ProductList searchParams={searchParams} />
       </Suspense>
 
     </>
