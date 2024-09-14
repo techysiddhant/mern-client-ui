@@ -15,6 +15,7 @@ type ChosenConfig = {
     [key: string]: string
 }
 const ProductModal = ({ product }: { product: Product }) => {
+    const [dialogOpen, setDialogOpen] = useState(false);
     const cartItems = useAppSelector((state) => state.cart.cartItems);
     const defaultConfiguration = Object.entries(product.category.priceConfiguration).map(([key, value]) => {
         return {
@@ -79,7 +80,9 @@ const ProductModal = ({ product }: { product: Product }) => {
             },
             qty: 1
         }
-        dispatch(addToCart(itemToAdd))
+        dispatch(addToCart(itemToAdd));
+        setSelectedToppings([]);
+        setDialogOpen(false);
     }
     const totalPrice = useMemo(() => {
         const toppingsTotal = selectedToppings.reduce((acc, item) => {
@@ -94,7 +97,7 @@ const ProductModal = ({ product }: { product: Product }) => {
 
 
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild >
                 <Button className="bg-orange-200 hover:bg-orange-300 text-orange-500 px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">Choose</Button>
             </DialogTrigger>
