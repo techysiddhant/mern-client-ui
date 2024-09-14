@@ -5,6 +5,7 @@ import { Tenant } from "@/lib/types"
 import dynamic from "next/dynamic"
 import TenantSelect from "./TenantSelect"
 import { getSession } from "@/lib/session"
+import Logout from "./Logout"
 const CartCounterWithoutSSR = dynamic(() => import('./CartCounter'), { ssr: false });
 
 const Header = async () => {
@@ -41,9 +42,13 @@ const Header = async () => {
                         <Phone />
                         <span className="">+91 1234567890</span>
                     </div>
-                    <Button size={'sm'}>
-                        {session ? 'Logout' : 'Login'}
-                    </Button>
+                    {
+                        session ? <Logout />
+                            : <Button size={'sm'} asChild>
+                                <Link href="/login">Login</Link>
+                            </Button>
+                    }
+
                 </div>
             </nav>
         </header>
