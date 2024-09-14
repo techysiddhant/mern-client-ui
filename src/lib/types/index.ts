@@ -53,3 +53,14 @@ export type Topping = {
   price: number;
   image: string;
 };
+export interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: "admin" | "customer" | "manager";
+  tenant: null | number;
+}
+export interface Session {
+  user: User;
+}
