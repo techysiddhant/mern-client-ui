@@ -5,6 +5,7 @@ import { Manrope } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Header from "@/components/custom/header";
 import StoreProvider from "./StoreProvider";
+import { Toaster } from "sonner";
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope"
@@ -37,6 +38,7 @@ export default function RootLayout({
           className={cn(manrope.variable, "antialiased font-manrope bg-background")}
         >
           <Header />
+          <Toaster closeButton richColors />
           <main>
             {children}
           </main>

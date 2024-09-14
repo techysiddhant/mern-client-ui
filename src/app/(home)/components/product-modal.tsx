@@ -11,6 +11,7 @@ import { startTransition, Suspense, useMemo, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { addToCart, CartItem } from "@/lib/store/features/cart/cartSlice";
 import { hashTheItem } from "@/lib/utils";
+import { toast } from "sonner";
 type ChosenConfig = {
     [key: string]: string
 }
@@ -83,6 +84,7 @@ const ProductModal = ({ product }: { product: Product }) => {
         dispatch(addToCart(itemToAdd));
         setSelectedToppings([]);
         setDialogOpen(false);
+        toast.success("Added to cart");
     }
     const totalPrice = useMemo(() => {
         const toppingsTotal = selectedToppings.reduce((acc, item) => {
