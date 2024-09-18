@@ -7,6 +7,7 @@ import Header from "@/components/custom/header";
 import StoreProvider from "./StoreProvider";
 import { Toaster } from "sonner";
 import Refresher from "@/components/custom/Refresher";
+import QueryProvider from "./QueryProvider";
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope"
@@ -38,13 +39,16 @@ export default function RootLayout({
         <body
           className={cn(manrope.variable, "antialiased font-manrope bg-background")}
         >
-          <Refresher>
-            <Header />
-            <Toaster closeButton richColors />
-            <main>
-              {children}
-            </main>
-          </Refresher>
+          <QueryProvider>
+            <Refresher>
+              <Header />
+              <Toaster closeButton richColors />
+              <main>
+                {children}
+              </main>
+            </Refresher>
+          </QueryProvider>
+
         </body>
       </StoreProvider>
     </html>
