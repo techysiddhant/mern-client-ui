@@ -1,5 +1,5 @@
 "use client";
-import { Plus } from 'lucide-react';
+import { LoaderCircle, Plus } from 'lucide-react';
 import React, { useState } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -18,6 +18,8 @@ import {
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { addAddress } from '@/lib/http/api';
 const formSchema = z.object({
     address: z.string().min(2, {
         message: 'Address must be at least 2 characters.',
@@ -29,27 +31,27 @@ const AddAddress = ({ customerId }: { customerId: string | undefined }) => {
     const addressForm = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
-    // const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-    // const { mutate, isPending } = useMutation({
-    //     mutationKey: ['address', customerId],
-    //     mutationFn: async (address: string) => {
-    //         // todo: put proper check on customerId.
-    //         return await addAddress(customerId!, address);
-    //     },
-    //     onSuccess: () => {
-    //         addressForm.reset();
-    //         setIsModalOpen(false);
-    //         return queryClient.invalidateQueries({ queryKey: ['customer'] });
-    //     },
-    // });
+    const { mutate, isPending } = useMutation({
+        mutationKey: ['address', customerId],
+        mutationFn: async (address: string) => {
+            // todo: put proper check on customerId.
+            return await addAddress(customerId!, address);
+        },
+        onSuccess: () => {
+            addressForm.reset();
+            setIsModalOpen(false);
+            return queryClient.invalidateQueries({ queryKey: ['customer'] });
+        },
+    });
 
     const handleAddressAdd = (e: React.FormEvent<HTMLFormElement>) => {
         e.stopPropagation();
 
-        // return addressForm.handleSubmit((data: z.infer<typeof formSchema>) => {
-        //     mutate(data.address);
-        // })(e);
+        return addressForm.handleSubmit((data: z.infer<typeof formSchema>) => {
+            mutate(data.address);
+        })(e);
     };
     // TODO: Display error if any (useMutation -> isError)
 
@@ -91,17 +93,17 @@ const AddAddress = ({ customerId }: { customerId: string | undefined }) => {
                         </div>
                         <DialogFooter>
                             <Button type="submit"
-                            // disabled={isPending}
+                                disabled={isPending}
                             >
-                                {/* {isPending ? (
+                                {isPending ? (
                                     <span className="flex items-center gap-2">
                                         <LoaderCircle className="animate-spin" />
                                         <span>Please wait...</span>
                                     </span>
                                 ) : (
                                     'Save changes'
-                                )} */}
-                                Save Changes
+                                )}
+
                             </Button>
                         </DialogFooter>
                     </form>

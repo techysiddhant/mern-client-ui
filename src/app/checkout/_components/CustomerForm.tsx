@@ -107,7 +107,7 @@ const CustomerForm = () => {
                                     <div>
                                         <div className="flex items-center justify-between">
                                             <Label htmlFor="name">Address</Label>
-                                            <AddAddress customerId={"1"} />
+                                            <AddAddress customerId={customer?._id} />
                                         </div>
 
                                         <FormField
