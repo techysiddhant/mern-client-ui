@@ -120,63 +120,42 @@ const CustomerForm = () => {
                                                             <RadioGroup
                                                                 onValueChange={field.onChange}
                                                                 className="grid grid-cols-2 gap-6 mt-2">
-                                                                {/* <Card
-                                                                    className="p-6"
-                                                                    // key={address.text}
-                                                                    >
-                                                                    <div className="flex items-center space-x-2">
-                                                                        <FormControl>
-                                                                            <RadioGroupItem
-                                                                                value={
-                                                                                    address.text
-                                                                                }
-                                                                                id={
-                                                                                    address.text
-                                                                                }
-                                                                            />
-                                                                        </FormControl>
-                                                                        <Label
-                                                                            htmlFor={
-                                                                                address.text
-                                                                            }
-                                                                            className="leading-normal">
-                                                                            {
-                                                                                address.text
-                                                                            }
-                                                                        </Label>
-                                                                    </div>
-                                                                </Card> */}
-                                                                {/* {customer?.addresses.map(
-                                                                (address) => {
-                                                                    return (
-                                                                        <Card
-                                                                            className="p-6"
-                                                                            key={address.text}>
-                                                                            <div className="flex items-center space-x-2">
+
+                                                                {customer?.addresses.map(
+                                                                    (address: any) => {
+                                                                        return (
+                                                                            <Card
+                                                                                className="p-6"
+                                                                                key={address.text}>
                                                                                 <FormControl>
-                                                                                    <RadioGroupItem
-                                                                                        value={
-                                                                                            address.text
-                                                                                        }
-                                                                                        id={
-                                                                                            address.text
-                                                                                        }
-                                                                                    />
+
+                                                                                    <div className="flex items-center space-x-2  ">
+                                                                                        <RadioGroupItem
+
+                                                                                            value={
+                                                                                                address.text
+                                                                                            }
+                                                                                            id={
+                                                                                                address.text
+                                                                                            }
+                                                                                        />
+                                                                                        <Label
+                                                                                            htmlFor={
+                                                                                                address.text
+                                                                                            }
+                                                                                            className="leading-normal block w-full cursor-pointer">
+                                                                                            {
+                                                                                                address.text
+                                                                                            }
+                                                                                        </Label>
+                                                                                    </div>
+
                                                                                 </FormControl>
-                                                                                <Label
-                                                                                    htmlFor={
-                                                                                        address.text
-                                                                                    }
-                                                                                    className="leading-normal">
-                                                                                    {
-                                                                                        address.text
-                                                                                    }
-                                                                                </Label>
-                                                                            </div>
-                                                                        </Card>
-                                                                    );
-                                                                }
-                                                            )} */}
+
+                                                                            </Card>
+                                                                        );
+                                                                    }
+                                                                )}
                                                             </RadioGroup>
                                                         </FormControl>
                                                         <FormMessage />
