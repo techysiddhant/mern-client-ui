@@ -12,11 +12,11 @@ const CheckoutPage = async ({
 
     const sParams = new URLSearchParams(searchParams);
     const existingQueryString = sParams.toString();
-    if (!session) {
-        redirect(`/login?${existingQueryString}`);
-    }
-    sParams.append('return-to', `/checkout?${existingQueryString}`);
 
+    sParams.append('return-to', `/checkout?${existingQueryString}`);
+    if (!session) {
+        redirect(`/login?${sParams}`);
+    }
     return (
         <CustomerForm />
     )
