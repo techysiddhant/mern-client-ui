@@ -15,6 +15,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { useSearchParams } from 'next/navigation';
 import AddAddress from './AddAddress';
 import OrderSummary from './orderSummary';
+import { useQuery } from '@tanstack/react-query';
+import { getCustomer } from '@/lib/http/api';
 const formSchema = z.object({
     address: z.string({ required_error: 'Please select an address.' }),
     paymentMode: z.enum(['card', 'cash'], {
@@ -24,12 +26,22 @@ const formSchema = z.object({
 });
 const CustomerForm = () => {
     // const dispatch = useAppDispatch();
+    const { data: customer, isLoading } = useQuery({
+        queryKey: ['customer'],
+        queryFn: async () => {
+            return await getCustomer().then((res) => res.data)
+        }
+    });
 
+    // console.log(customer);
     const customerForm = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
 
     const searchParam = useSearchParams();
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
     // const chosenCouponCode = React.useRef('');
     // const idempotencyKeyRef = React.useRef('');
     const handlePlaceOrder = (data: z.infer<typeof formSchema>) => {
@@ -67,7 +79,7 @@ const CustomerForm = () => {
                                         id="fname"
                                         type="text"
                                         className="w-full"
-                                        // defaultValue={customer?.firstName}
+                                        defaultValue={customer?.firstName}
                                         disabled
                                     />
                                 </div>
@@ -77,7 +89,7 @@ const CustomerForm = () => {
                                         id="lname"
                                         type="text"
                                         className="w-full"
-                                        // defaultValue={customer?.lastName}
+                                        defaultValue={customer?.lastName}
                                         disabled
                                     />
                                 </div>
@@ -87,7 +99,7 @@ const CustomerForm = () => {
                                         id="email"
                                         type="text"
                                         className="w-full"
-                                        // defaultValue={customer?.email}
+                                        defaultValue={customer?.email}
                                         disabled
                                     />
                                 </div>
