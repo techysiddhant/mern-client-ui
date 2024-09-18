@@ -14,6 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 // import { useAppDispatch } from '@/lib/store/hooks';
 import { useSearchParams } from 'next/navigation';
 import AddAddress from './AddAddress';
+import OrderSummary from './orderSummary';
 const formSchema = z.object({
     address: z.string({ required_error: 'Please select an address.' }),
     paymentMode: z.enum(['card', 'cash'], {
@@ -53,7 +54,7 @@ const CustomerForm = () => {
     return (
         <Form {...customerForm}>
             <form onSubmit={customerForm.handleSubmit(handlePlaceOrder)}>
-                <div className="flex container gap-6 mt-16">
+                <div className="flex container mx-auto gap-6 mt-16">
                     <Card className="w-3/5 border-none">
                         <CardHeader>
                             <CardTitle>Customer details</CardTitle>
@@ -248,12 +249,12 @@ const CustomerForm = () => {
                             </div>
                         </CardContent>
                     </Card>
-                    {/* <OrderSummary
-                        isPlaceOrderPending={isPlaceOrderPending}
-                        handleCouponCodeChange={(code) => {
-                            chosenCouponCode.current = code;
-                        }}
-                    /> */}
+                    <OrderSummary
+                    // isPlaceOrderPending={isPlaceOrderPending}
+                    // handleCouponCodeChange={(code) => {
+                    //     chosenCouponCode.current = code;
+                    // }}
+                    />
                 </div>
             </form>
         </Form>
