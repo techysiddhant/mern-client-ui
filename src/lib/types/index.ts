@@ -64,3 +64,7 @@ export interface User {
 export interface Session {
   user: User;
 }
+export interface CouponCodeData {
+  code: string;
+  tenantId: string;
+}

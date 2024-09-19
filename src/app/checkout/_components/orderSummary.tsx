@@ -2,14 +2,14 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-// import { verifyCoupon } from '@/lib/http/api';
+import { verifyCoupon } from '@/lib/http/api';
 import { useAppSelector } from '@/lib/store/hooks';
-// import { CouponCodeData } from '@/lib/types';
+import { CouponCodeData } from '@/lib/types';
 import { getItemTotal } from '@/lib/utils';
-// import { useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { LoaderCircle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 
 // todo: Move this to the server, and calulate according to your business rules.
 const TAXES_PERCENTAGE = 18;
@@ -27,8 +27,8 @@ const OrderSummary = ({
 
     const cart = useAppSelector((state) => state.cart.cartItems);
 
-    const [discountPercentage, setDiscountPercentage] = React.useState(0);
-    const [discountError, setDiscountError] = React.useState('');
+    const [discountPercentage, setDiscountPercentage] = useState(0);
+    const [discountError, setDiscountError] = useState('');
 
     const couponCodeRef = React.useRef<HTMLInputElement>(null);
 
@@ -38,10 +38,43 @@ const OrderSummary = ({
         }, 0);
     }, [cart]);
 
+
+
+    // todo: display error isError, error
+    const { mutate } = useMutation({
+        mutationKey: ['couponCode'],
+        mutationFn: async () => {
+            if (!couponCodeRef.current) {
+                return;
+            }
+
+            const restaurantId = searchParam.get('restaurantId');
+
+            if (!restaurantId) {
+                return;
+            }
+
+            const data: CouponCodeData = {
+                code: couponCodeRef.current.value,
+                tenantId: restaurantId,
+            };
+            return await verifyCoupon(data).then((res) => res.data);
+        },
+        onSuccess: (data) => {
+            if (data.valid) {
+                setDiscountError('');
+                handleCouponCodeChange(couponCodeRef.current ? couponCodeRef.current.value : '');
+                setDiscountPercentage(data.discount);
+                return;
+            }
+            setDiscountError('Coupon is invalid');
+            handleCouponCodeChange('');
+            setDiscountPercentage(0);
+        },
+    });
     const discountAmount = React.useMemo(() => {
         return Math.round((subTotal * discountPercentage) / 100);
     }, [subTotal, discountPercentage]);
-
     const taxesAmount = React.useMemo(() => {
         const amountAfterDiscount = subTotal - discountAmount;
 
@@ -50,51 +83,16 @@ const OrderSummary = ({
 
     const grandWithDiscountTotal = React.useMemo(() => {
         return subTotal - discountAmount + taxesAmount + DELIVERY_CHARGES;
-    }, [subTotal, discountAmount, taxesAmount, DELIVERY_CHARGES]);
+    }, [subTotal, discountAmount, taxesAmount]);
 
     const grandWithoutDiscountTotal = React.useMemo(() => {
         return subTotal + taxesAmount + DELIVERY_CHARGES;
-    }, [subTotal, taxesAmount, DELIVERY_CHARGES]);
+    }, [subTotal, taxesAmount]);
+    const handleCouponValidation = (e: React.MouseEvent) => {
+        e.preventDefault();
 
-    // todo: display error isError, error
-    // const { mutate } = useMutation({
-    //     mutationKey: ['couponCode'],
-    //     mutationFn: async () => {
-    //         if (!couponCodeRef.current) {
-    //             return;
-    //         }
-
-    //         const restaurantId = searchParam.get('restaurantId');
-
-    //         if (!restaurantId) {
-    //             return;
-    //         }
-
-    //         const data: CouponCodeData = {
-    //             code: couponCodeRef.current.value,
-    //             tenantId: restaurantId,
-    //         };
-    //         return await verifyCoupon(data).then((res) => res.data);
-    //     },
-    //     onSuccess: (data) => {
-    //         if (data.valid) {
-    //             setDiscountError('');
-    //             handleCouponCodeChange(couponCodeRef.current ? couponCodeRef.current.value : '');
-    //             setDiscountPercentage(data.discount);
-    //             return;
-    //         }
-
-    //         setDiscountError('Coupon is invalid');
-    //         handleCouponCodeChange('');
-    //         setDiscountPercentage(0);
-    //     },
-    // });
-
-    // const handleCouponValidation = (e: React.MouseEvent) => {
-    //     e.preventDefault();
-
-    //     mutate();
-    // };
+        mutate();
+    };
 
     return (
         <Card className="w-2/5 border-none h-auto self-start">
@@ -142,7 +140,7 @@ const OrderSummary = ({
                     />
                     {/* todo: add loading */}
                     <Button
-                        // onClick={handleCouponValidation} 
+                        onClick={handleCouponValidation}
                         variant={'outline'}>
                         Apply
                     </Button>
